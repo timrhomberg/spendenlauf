@@ -17,22 +17,14 @@ export default class LoginScreen extends Component {
         this.setState(state);
     }
 
-    /*componentDidMount() {
+    componentDidUpdate() {
         auth.onAuthStateChanged(user => {
             if (user) {
-                console.log(user);
-                this.props.navigation.navigate("Home");
+                const { navigation } = this.props;
+                navigation.replace("Home");
             }
         })
-    }*/
-
-    /*componentDidUpdate() {
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                this.navigation.replace("Home")
-            }
-        })
-    }*/
+    }
 
     handleSignUp() {
         auth
@@ -40,10 +32,6 @@ export default class LoginScreen extends Component {
             .then(userCredentials => {
                 const user = userCredentials.user;
                 console.log('Registered with:', user.email);
-            })
-            .then(() => {
-                const { navigation } = this.props;
-                navigation.replace("Home");
             })
             .catch(error => alert(error.message))
     }
@@ -55,22 +43,8 @@ export default class LoginScreen extends Component {
                 const user = userCredentials.user;
                 console.log('Logged in with:', user.email);
             })
-            .then(() => {
-                const { navigation } = this.props;
-                navigation.replace("Home");
-            })
             .catch(error => alert(error.message))
     }
-
-    /*.then(
-    auth.onAuthStateChanged(user => {
-        if (user) {
-            const { navigation } = this.props;
-            console.log(user);
-            navigation.replace("Home");
-        }
-    })
-)*/
 
     render() {
         return (

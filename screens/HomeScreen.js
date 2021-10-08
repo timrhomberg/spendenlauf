@@ -22,6 +22,7 @@ export default class HomeScreen extends Component {
         return (
             <View style={styles.container}>
                 <Text>Email: {auth.currentUser?.email}</Text>
+                <Text>Role:</Text>
                 <TouchableOpacity
                     onPress={() => this.handleSignOut()}
                     style={styles.button}
