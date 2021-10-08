@@ -1,84 +1,117 @@
-import { useNavigation } from '@react-navigation/core'
-import React, { useEffect, useState } from 'react'
+import React, {Component} from 'react'
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { auth } from '../firebase'
 
-const LoginScreen = () => {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+export default class LoginScreen extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            email: '',
+            password: ''
+        };
+    }
 
-    const navigation = useNavigation()
+    updateInputVal = (val, prop) => {
+        const state = this.state;
+        state[prop] = val;
+        this.setState(state);
+    }
 
-    useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged(user => {
+    /*componentDidMount() {
+        auth.onAuthStateChanged(user => {
             if (user) {
-                navigation.replace("Home")
+                console.log(user);
+                this.props.navigation.navigate("Home");
             }
         })
+    }*/
 
-        return unsubscribe
-    }, [])
+    /*componentDidUpdate() {
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                this.navigation.replace("Home")
+            }
+        })
+    }*/
 
-    const handleSignUp = () => {
+    handleSignUp() {
         auth
-            .createUserWithEmailAndPassword(email, password)
+            .createUserWithEmailAndPassword(this.state.email, this.state.password)
             .then(userCredentials => {
                 const user = userCredentials.user;
                 console.log('Registered with:', user.email);
             })
-            .catch(error => alert(error.message))
-    }
-
-    const handleLogin = () => {
-        auth
-            .signInWithEmailAndPassword(email, password)
-            .then(userCredentials => {
-                const user = userCredentials.user;
-                console.log('Logged in with:', user.email);
+            .then(() => {
+                const { navigation } = this.props;
+                navigation.replace("Home");
             })
             .catch(error => alert(error.message))
     }
 
-    return (
-        <KeyboardAvoidingView
-            style={styles.container}
-            behavior="padding"
-        >
-            <View style={styles.inputContainer}>
-                <TextInput
-                    placeholder="Email"
-                    value={email}
-                    onChangeText={text => setEmail(text)}
-                    style={styles.input}
-                />
-                <TextInput
-                    placeholder="Password"
-                    value={password}
-                    onChangeText={text => setPassword(text)}
-                    style={styles.input}
-                    secureTextEntry
-                />
-            </View>
+    handleLogin() {
+        auth
+            .signInWithEmailAndPassword(this.state.email, this.state.password)
+            .then(userCredentials => {
+                const user = userCredentials.user;
+                console.log('Logged in with:', user.email);
+            })
+            .then(() => {
+                const { navigation } = this.props;
+                navigation.replace("Home");
+            })
+            .catch(error => alert(error.message))
+    }
 
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                    onPress={handleLogin}
-                    style={styles.button}
-                >
-                    <Text style={styles.buttonText}>Login</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    onPress={handleSignUp}
-                    style={[styles.button, styles.buttonOutline]}
-                >
-                    <Text style={styles.buttonOutlineText}>Register</Text>
-                </TouchableOpacity>
+    /*.then(
+    auth.onAuthStateChanged(user => {
+        if (user) {
+            const { navigation } = this.props;
+            console.log(user);
+            navigation.replace("Home");
+        }
+    })
+)*/
+
+    render() {
+        return (
+            <View
+                style={styles.container}
+                behavior="padding"
+            >
+                <View style={styles.inputContainer}>
+                    <TextInput
+                        placeholder="Email"
+                        value={this.state.email}
+                        onChangeText={(val) => this.updateInputVal(val, 'email')}
+                        style={styles.input}
+                    />
+                    <TextInput
+                        placeholder="Password"
+                        value={this.state.password}
+                        onChangeText={(val) => this.updateInputVal(val, 'password')}
+                        style={styles.input}
+                        secureTextEntry
+                    />
+                </View>
+
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity
+                        onPress={() => this.handleLogin()}
+                        style={styles.button}
+                    >
+                        <Text style={styles.buttonText}>Login</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => this.handleSignUp()}
+                        style={[styles.button, styles.buttonOutline]}
+                    >
+                        <Text style={styles.buttonOutlineText}>Register</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
-        </KeyboardAvoidingView>
-    )
+        )
+    }
 }
-
-export default LoginScreen
 
 const styles = StyleSheet.create({
     container: {
