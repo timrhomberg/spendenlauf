@@ -1,8 +1,9 @@
-import React, {Component} from 'react'
-import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import React from 'react'
+import { StyleSheet, View } from 'react-native'
 import { auth } from '../firebase/firebase'
+import { Button, Input, Layout } from '@ui-kitten/components';
 
-export default class LoginScreen extends Component {
+export default class LoginScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -48,41 +49,44 @@ export default class LoginScreen extends Component {
 
     render() {
         return (
-            <View
+            <Layout
                 style={styles.container}
-                behavior="padding"
             >
                 <View style={styles.inputContainer}>
-                    <TextInput
+                    <Input
                         placeholder="Email"
                         value={this.state.email}
                         onChangeText={(val) => this.updateInputVal(val, 'email')}
                         style={styles.input}
+                        size='medium'
                     />
-                    <TextInput
+                    <Input
                         placeholder="Password"
                         value={this.state.password}
                         onChangeText={(val) => this.updateInputVal(val, 'password')}
                         style={styles.input}
+                        size='medium'
                         secureTextEntry
                     />
                 </View>
 
                 <View style={styles.buttonContainer}>
-                    <TouchableOpacity
+                    <Button
                         onPress={() => this.handleLogin()}
                         style={styles.button}
                     >
-                        <Text style={styles.buttonText}>Login</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
+                        Login
+                    </Button>
+                    <Button
                         onPress={() => this.handleSignUp()}
-                        style={[styles.button, styles.buttonOutline]}
+                        style={[styles.button]}
+                        appearance='ghost'
+                        status='control'
                     >
-                        <Text style={styles.buttonOutlineText}>Register</Text>
-                    </TouchableOpacity>
+                        Register
+                    </Button>
                 </View>
-            </View>
+            </Layout>
         )
     }
 }
@@ -98,8 +102,6 @@ const styles = StyleSheet.create({
     },
     input: {
         backgroundColor: 'white',
-        paddingHorizontal: 15,
-        paddingVertical: 10,
         borderRadius: 10,
         marginTop: 5,
     },
@@ -115,21 +117,6 @@ const styles = StyleSheet.create({
         padding: 15,
         borderRadius: 10,
         alignItems: 'center',
-    },
-    buttonOutline: {
-        backgroundColor: 'white',
-        marginTop: 5,
-        borderColor: '#0782F9',
-        borderWidth: 2,
-    },
-    buttonText: {
-        color: 'white',
-        fontWeight: '700',
-        fontSize: 16,
-    },
-    buttonOutlineText: {
-        color: '#0782F9',
-        fontWeight: '700',
-        fontSize: 16,
-    },
+        marginTop: 5
+    }
 })

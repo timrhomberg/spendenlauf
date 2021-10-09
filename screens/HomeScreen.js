@@ -1,8 +1,8 @@
-import React, {Component} from 'react'
-import { StyleSheet, Text, TouchableOpacity, View, ScrollView, TextInput } from 'react-native'
+import React from 'react'
+import { StyleSheet, Text, TouchableOpacity, View, TextInput } from 'react-native'
 import { auth, firestore } from '../firebase/firebase'
 
-export default class HomeScreen extends Component {
+export default class HomeScreen extends React.Component {
     constructor(props) {
         super(props);
 
@@ -68,6 +68,11 @@ export default class HomeScreen extends Component {
         }
     }
 
+    goToDSGVO() {
+        const { navigation } = this.props;
+        navigation.navigate("DSGVO");
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -126,6 +131,12 @@ export default class HomeScreen extends Component {
                     style={styles.button}
                 >
                     <Text style={styles.buttonText}>Get Data</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => this.goToDSGVO()}
+                    style={styles.button}
+                >
+                    <Text style={styles.buttonText}>DSGVO</Text>
                 </TouchableOpacity>
             </View>
         )
