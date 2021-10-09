@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import { auth } from '../firebase'
+import { auth } from '../firebase/firebase'
 
 export default class LoginScreen extends Component {
     constructor(props) {
