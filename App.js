@@ -3,10 +3,12 @@ import {StyleSheet} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import LoginScreen from './screens/LoginScreen';
-import HomeScreen from './screens/HomeScreen';
+import ProfileScreen from './screens/ProfileScreen';
 import DSGVOScreen from "./screens/DSGVOScreen";
-import { ApplicationProvider } from '@ui-kitten/components';
+import {ApplicationProvider, IconRegistry} from '@ui-kitten/components';
 import * as eva from '@eva-design/eva';
+import { FeatherIconsPack } from './feather-icons';
+import Tabs from "./navigation/tabs";
 
 const Stack = createNativeStackNavigator();
 
@@ -15,10 +17,12 @@ export default class App extends Component {
     render() {
         return (
             <ApplicationProvider {...eva} theme={eva.light}>
+                <IconRegistry icons={FeatherIconsPack} />
                 <NavigationContainer style={styles.container}>
                     <Stack.Navigator>
                         <Stack.Screen options={{headerShown: false}} name="Login" component={LoginScreen}/>
-                        <Stack.Screen name="Home" component={HomeScreen}/>
+                        <Stack.Screen options={{headerShown: false}} name="MyTabs" component={Tabs}/>
+                        <Stack.Screen name="Profile" component={ProfileScreen}/>
                         <Stack.Screen name="DSGVO" component={DSGVOScreen}/>
                     </Stack.Navigator>
                 </NavigationContainer>

@@ -22,7 +22,7 @@ export default class LoginScreen extends React.Component {
         auth.onAuthStateChanged(user => {
             if (user) {
                 const { navigation } = this.props;
-                navigation.replace("Home");
+                navigation.replace("MyTabs");
             }
         })
     }
