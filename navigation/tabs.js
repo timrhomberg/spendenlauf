@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "../screens/HomeScreen";
 import SettingScreen from "../screens/SettingScreen";
 import {Ionicons} from "@expo/vector-icons";
+import {StyleSheet} from "react-native";
 
 const Tab = createBottomTabNavigator();
 
@@ -10,10 +11,11 @@ const Tabs = () => {
     return (
         <Tab.Navigator>
             <Tab.Screen name="Home" component={HomeScreen} options={{
-                headerShown: false,
+                headerShown: true,
                 tabBarIcon: ({ color, size }) => (
                     <Ionicons name="home-outline" size={24} color="black"/>
-                )
+                ),
+
             }}/>
             <Tab.Screen name="Setting" component={SettingScreen} options={{
                 tabBarIcon: ({color, size}) => (
@@ -25,3 +27,10 @@ const Tabs = () => {
 }
 
 export default Tabs;
+
+
+const styles = StyleSheet.create({
+    container: {
+        backgroundColor: '#fff'
+    }
+});

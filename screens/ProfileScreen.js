@@ -1,6 +1,17 @@
 import React from 'react'
-import {StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
-import {Input, Layout, Icon, MenuItem, OverflowMenu, TopNavigation, TopNavigationAction} from "@ui-kitten/components";
+import {StyleSheet, TextInput, TouchableOpacity, View} from 'react-native'
+import {
+    Input,
+    Layout,
+    Divider,
+    Icon,
+    MenuItem,
+    OverflowMenu,
+    TopNavigation,
+    TopNavigationAction,
+    Text,
+    SelectItem, Select
+} from "@ui-kitten/components";
 import {AntDesign, Feather, Ionicons} from "@expo/vector-icons";
 import {auth, firestore} from "../firebase/firebase";
 
@@ -64,6 +75,8 @@ export default class ProfileScreen extends React.Component {
     render() {
         return (
             <Layout style={styles.layout} level='1'>
+                <Text style={styles.title} category='h3'>General Information</Text>
+                <Divider/>
                 <Text style={styles.text} category='p2'>Vorname</Text>
                 <Input
                     style={styles.input}
@@ -118,6 +131,24 @@ export default class ProfileScreen extends React.Component {
                         this.updateInputVal(text, 'plz');
                     }}
                 />
+                <Text style={styles.text} category='p2'>Geschlecht</Text>
+                <Select
+                    style={styles.select}
+                    onSelect={index => console.log(index)}>
+                    <SelectItem title='Mann'/>
+                    <SelectItem title='Frau'/>
+                    <SelectItem title='Intersexuell'/>
+                </Select>
+                <Text style={styles.text} category='p2'>Tshirt Grösse</Text>
+                <Select
+                    style={styles.select}
+                    onSelect={index => console.log(index)}>
+                    <SelectItem title='XS'/>
+                    <SelectItem title='S'/>
+                    <SelectItem title='M'/>
+                    <SelectItem title='L'/>
+                    <SelectItem title='XL'/>
+                </Select>
                 <TouchableOpacity
                     onPress={() => this.getData().then(() => console.log("hello"))}
                     style={styles.button}
@@ -130,6 +161,9 @@ export default class ProfileScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
+    layout: {
+        height: '100%'
+    },
     menu: {
         flex: 1,
         margin: 8
@@ -151,13 +185,26 @@ const styles = StyleSheet.create({
         height: 40,
         marginRight: 20,
         marginLeft: 20,
-        borderWidth: 1
+        borderWidth: 1,
+        marginTop: 5
+    },
+    select: {
+        height: 40,
+        marginRight: 20,
+        marginLeft: 20,
+        marginTop: 6
     },
     icon: {
         width: 32,
         height: 32
     },
     text: {
+        marginTop: 10,
+        marginRight: 20,
+        marginLeft: 20
+    },
+    title: {
+        marginTop: 10,
         marginRight: 20,
         marginLeft: 20
     }
