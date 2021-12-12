@@ -9,7 +9,6 @@ import {ApplicationProvider, IconRegistry} from '@ui-kitten/components';
 import * as eva from '@eva-design/eva';
 import {FeatherIconsPack} from './feather-icons';
 import Tabs from "./navigation/tabs";
-import ChangePasswordScreen from "./screens/ChangePasswordScreen";
 import InfoScreen from "./screens/InfoScreen";
 
 const Stack = createNativeStackNavigator();
@@ -26,7 +25,6 @@ export default class App extends Component {
                         <Stack.Screen name="Profile" component={ProfileScreen}/>
                         <Stack.Screen name="Info" component={InfoScreen}/>
                         <Stack.Screen name="DSGVO" component={DSGVOScreen}/>
-                        <Stack.Screen name="ChangePassword" component={ChangePasswordScreen}/>
                     </Stack.Navigator>
                 </NavigationContainer>
             </ApplicationProvider>

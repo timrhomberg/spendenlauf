@@ -1,6 +1,6 @@
 import React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
-import {Avatar, Layout} from '@ui-kitten/components'
+import {Avatar, Button, Card, Layout, Modal} from '@ui-kitten/components'
 import {AntDesign, Feather, Ionicons, MaterialIcons} from "@expo/vector-icons";
 import {auth} from "../firebase/firebase";
 
@@ -9,7 +9,9 @@ export default class SettingScreen extends React.Component {
         super(props);
 
         this.state = {
-            role: 'Admin'
+            role: 'Admin',
+            visible: false,
+            text: ''
         }
     }
 
@@ -18,9 +20,8 @@ export default class SettingScreen extends React.Component {
         navigation.navigate("Profile");
     }
 
-    goToChangePassword() {
-        const {navigation} = this.props;
-        navigation.navigate("ChangePassword");
+    async sendPasswordReset() {
+        await auth.sendPasswordResetEmail(auth.currentUser.email);
     }
 
     goToDSGVO() {
@@ -43,6 +44,13 @@ export default class SettingScreen extends React.Component {
         navigation.navigate("Info");
     }
 
+    updateInputVal = (val, prop) => {
+        const state = this.state;
+        state[prop] = val;
+        this.setState(state);
+    }
+
+
     render() {
         return (
             <Layout style={styles.layout} level='1'>
@@ -62,13 +70,36 @@ export default class SettingScreen extends React.Component {
                         <Ionicons style={styles.iconRight} name="arrow-forward-outline" size={20}/>
                     </TouchableOpacity>
                     <TouchableOpacity
-                        onPress={() => this.goToChangePassword()}
+                        onPress={() => {
+                            this.sendPasswordReset()
+                                .then(() => {
+                                    console.log('Password reset email sent successfully')
+                                    this.updateInputVal('Password reset email sent successfully', 'text')
+                                    this.updateInputVal(true, 'visible')
+                                })
+                                .catch(() => {
+                                    console.log('Password reset email could not be sent successfully')
+                                    this.updateInputVal('Password reset email could not be sent successfully', 'text')
+                                    this.updateInputVal(true, 'visible')
+                                });
+                        }}
                         style={styles.button}
                     >
                         <Feather style={styles.iconLeft} name='key' size={20}/>
                         <Text style={styles.buttonText}>Password wechseln</Text>
                         <Ionicons style={styles.iconRight} name="arrow-forward-outline" size={20}/>
                     </TouchableOpacity>
+                    <Modal
+                        visible={this.state.visible}
+                        backdropStyle={styles.backdrop}
+                        onBackdropPress={() => this.updateInputVal(false, 'visible')}>
+                        <Card disabled={true}>
+                            <Text>{this.state.text} 😻</Text>
+                            <Button onPress={() => this.updateInputVal(false, 'visible')}>
+                                DISMISS
+                            </Button>
+                        </Card>
+                    </Modal>
                     <TouchableOpacity
                         onPress={() => this.goToDSGVO()}
                         style={styles.button}
@@ -151,5 +182,8 @@ const styles = StyleSheet.create({
         fontWeight: '700',
         fontSize: 16,
         flex: 8
-    }
+    },
+    backdrop: {
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
 })

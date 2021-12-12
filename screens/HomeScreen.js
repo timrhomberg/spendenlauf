@@ -4,6 +4,7 @@ import {Layout, Text} from "@ui-kitten/components";
 import RunningComponent from "../components/RunningComponent";
 import ExampleComponent from "../components/ExampleComponent";
 import {auth, firestore} from "../firebase/firebase";
+import {Touchable} from "react-native-web";
 
 export default class HomeScreen extends React.Component {
     constructor(props) {
@@ -11,6 +12,8 @@ export default class HomeScreen extends React.Component {
         this.state = {
             runArray: [],
             runInformation: [],
+            groupArray: [],
+            groupInformation: []
         }
     }
 
@@ -48,6 +51,39 @@ export default class HomeScreen extends React.Component {
                     )
                 }
             })
+            .then(() => {
+                this.getUserGroupInformation()
+                    .then((querySnapshot) => {
+                        console.log("1")
+                        querySnapshot.forEach((doc) => {
+
+                            // doc.data() is never undefined for query doc snapshots
+                            console.log(doc.id, " => ", doc.data());
+                            let groupArray = [...this.state.groupArray];
+                            groupArray.push(doc.data());
+                            this.updateInputVal(groupArray, "groupArray");
+                            console.log("Length group Array:", this.state.groupArray.length);
+                            this.state.groupArray.push(doc.data());
+                        });
+                    })
+                    .then(() => {
+                        for (let i = 0; i < this.state.groupArray.length; i++) {
+                            this.getDonationRunInformation(this.state.groupArray[i]["laufId"]).then((doc) => {
+                                    if (doc.exists) {
+                                        console.log("Document data (group):", doc.data());
+                                        let groupInformation = [...this.state.groupInformation];
+                                        groupInformation.push(doc.data());
+                                        this.updateInputVal(groupInformation, "groupInformation");
+                                        console.log("Length group Information:", this.state.groupInformation.length);
+                                    } else {
+                                        // doc.data() will be undefined in this case
+                                        console.log("No such document!");
+                                    }
+                                }
+                            )
+                        }
+                    })
+            })
             .catch((error) => {
                 console.log("Error getting documents: ", error);
             });
@@ -59,16 +95,18 @@ export default class HomeScreen extends React.Component {
         this.setState(state);
     }
 
-    getDate() {
-        console.log(this.state.runInformation.length);
-        console.log(this.state.runInformation[0]["date"] * 1000);
-        //this.state.runInformation[0]["date"].padEnd(13, '0');
-    }
-
     async getUserRunInformation() {
         //const userRunRef = firestore.collection('users-in-lauf').where('userId', '==', auth.currentUser.uid);
         return firestore.collection('users-in-lauf').where("userId", "==", auth.currentUser.uid).get();
         //return await userRunRef.get();
+    }
+
+    async getUserGroupInformation() {
+        return firestore.collection('users-in-group').where("userId", "==", auth.currentUser.uid).get();
+    }
+
+    async getGroupInformation() {
+        return firestore.collection('groups').doc("8CWX9HPgRm3av86H0vJe").get();
     }
 
     async getDonationRunInformation(laufId) {
@@ -77,83 +115,42 @@ export default class HomeScreen extends React.Component {
         //return firestore.collection('laufe').doc(laufId).get();
     }
 
+    getActiveRuns(index) {
+        return new Date().getDate() === new Date(this.state.runInformation[index]["date"] * 1000).getDate();
+    }
+
     render() {
         return (
             <ScrollView>
                 <TouchableOpacity
-                    onPress={() => {
-                        console.log("Content of run Array", this.state.runArray);
-                        console.log("Size of run Array", this.state.runArray.length);
-                        console.log("Lauf Id from Array", this.state.runArray[0]["laufId"]);
-                    }}
-                    style={styles.button}
+                    onPress={() => this.getData()}
                 >
-                    <Text style={styles.buttonText}>Get Data from state</Text>
+                    <Text>press</Text>
                 </TouchableOpacity>
-
-                <Text>Info: {this.state.runInformation.length}</Text>
-                <TouchableOpacity
-                    onPress={() => {
-                        this.getUserRunInformation().then((querySnapshot) => {
-                            console.log("pressed")
-                            querySnapshot.forEach((doc) => {
-                                console.log(doc.exists)
-                                console.log(doc.data())
-
-                                // doc.data() is never undefined for query doc snapshots
-                                console.log("LOADED", doc.id, " => ", doc.data());
-                                this.updateInputVal(doc.data(), 'runs');
-                                this.updateInputVal(doc.data()["runnerNumber"], 'runnerNumber');
-                                this.updateInputVal(doc.data()["laufId"], 'laufId');
-
-
-                            });
-                        })
-                    }}
-                    style={styles.button}
-                >
-                    <Text style={styles.buttonText}>Get Data</Text>
-                </TouchableOpacity>
-                <View style={styles.container}>
-                    <ExampleComponent style={styles.example}/>
-                </View>
-
                 {this.state.runInformation.map((item, index) => {
                     return (
-                        <View>
-                            <Text>{item["name"]} ({item["length"]}m)</Text>
-                            <Text>Dauer: {item["duration"]}min</Text>
-                            <Text>Datum: {new Date(item["date"] * 1000).toLocaleString()}</Text>
-                            <Text>Laufnummer: {this.state.runArray[0]["runnerNumber"]}</Text>
-                            <Text>Ist Einnzelläufer: {this.state.runArray[0]["einzellaufer"]}</Text>
-                            <Text>{item["vereinId"]}</Text>
-                            <RunningComponent name={item["name"]} length={item["length"]} duration={item["duration"]}/>
+                        <View style={styles.container}>
+                            <RunningComponent name={item["name"]}
+                                              length={item["length"]}
+                                              duration={item["duration"]}
+                                              date={new Date(item["date"] * 1000).toLocaleDateString("de-CH")}
+                                              runnerNumber={this.state.runArray[0]["runnerNumber"]}
+                                              einzellaufer={true}
+                                              active={true || this.getActiveRuns(index)}
+                            />
                         </View>
                     )
                 })}
-
-
             </ScrollView>
         )
     }
 }
 
-/*
-                {this.items.map((item,index)=>{
-                    return (
-                        <View style={styles.container}>
-                            <Text>{item}</Text>
-                            <RunningComponent style={styles.con}/>
-                        </View>
-                    )
-                })}
- */
 const styles = StyleSheet.create({
     container: {
         alignSelf: 'center',
-        width: '80%'
-    },
-
+        width: '85%'
+    }
 })
 
 
