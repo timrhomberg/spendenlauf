@@ -21,6 +21,37 @@ export default class DSGVOScreen extends React.Component {
         }
     }
 
+    updateInputVal = (val, prop) => {
+        const state = this.state;
+        state[prop] = val;
+        this.setState(state);
+    }
+
+    componentDidMount() {
+        this.getDSGVOStatus();
+    }
+
+    getDSGVOStatus() {
+        firestore.collection('users').doc(auth.currentUser.uid).get()
+            .then((doc) => {
+                if (doc.exists) {
+                    console.log("Document data (user):", doc.data());
+                    console.log(doc.data()["acceptsTerms"]);
+                    this.updateInputVal(doc.data()["acceptsTerms"], "checked");
+                    console.log("checked Information:", this.state.checked);
+                } else {
+                    // doc.data() will be undefined in this case
+                    console.log("No such document!");
+                }
+            })
+    }
+
+    getVisibility() {
+        if (this.state.checked) {
+            return "none";
+        }
+    }
+
     agree = async () => {
         await firestore.collection('users').doc(auth.currentUser.uid).update({agreedToAppDSGVO: true});
         this.props.navigation.navigate('Home');
@@ -42,7 +73,7 @@ export default class DSGVOScreen extends React.Component {
                         <Text onPress={() => Linking.openURL('https://limmattalerlauf.ch/privacy-policy/')} status='info'>Klicke hier um die ausführliche Version zu öffnen</Text>
                     </ScrollView>
                 </Layout>
-                <Layout style={{ padding: 15 }}>
+                <Layout style={{ padding: 15, display: this.getVisibility() }}>
                     <CheckBox
                         checked={this.state.checked}
                         onChange={ () => {

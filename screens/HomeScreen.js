@@ -68,7 +68,7 @@ export default class HomeScreen extends React.Component {
                     })
                     .then(() => {
                         for (let i = 0; i < this.state.groupArray.length; i++) {
-                            this.getDonationRunInformation(this.state.groupArray[i]["laufId"]).then((doc) => {
+                            this.getGroupInformation(this.state.groupArray[i]["laufId"]).then((doc) => {
                                     if (doc.exists) {
                                         console.log("Document data (group):", doc.data());
                                         let groupInformation = [...this.state.groupInformation];
