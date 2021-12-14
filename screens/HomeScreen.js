@@ -11,12 +11,14 @@ export default class HomeScreen extends React.Component {
             runArray: [],
             runInformation: [],
             groupArray: [],
-            groupInformation: []
+            groupInformation: [],
+            role: ''
         }
     }
 
     componentDidMount() {
         this.getData();
+        this.getRoleData().then(r => console.log("loaded"));
     }
 
     getData() {
@@ -86,6 +88,16 @@ export default class HomeScreen extends React.Component {
             });
     }
 
+    async getRoleData() {
+        const userRef = firestore.collection('users').doc(auth.currentUser.uid);
+        const doc = await userRef.get();
+        if (!doc.exists) {
+            console.log('No such document!');
+        } else {
+            this.updateInputVal(doc.data()["role"], 'role');
+        }
+    }
+
     updateInputVal = (val, prop) => {
         const state = this.state;
         state[prop] = val;
@@ -109,7 +121,9 @@ export default class HomeScreen extends React.Component {
     }
 
     getActiveRuns(index) {
-        return new Date().getDate() === new Date(this.state.runInformation[index]["date"] * 1000).getDate();
+        return new Date().getDate() === new Date(this.state.runInformation[index]["date"] * 1000).getDate() &&
+            new Date().getMonth() === new Date(this.state.runInformation[index]["date"] * 1000).getMonth() &&
+            new Date().getFullYear() === new Date(this.state.runInformation[index]["date"] * 1000).getFullYear();
     }
 
     render() {
@@ -118,16 +132,17 @@ export default class HomeScreen extends React.Component {
                 {this.state.runInformation.length === 0 ?     <Button style={styles.button} appearance='outline' status='info'>
                     Du hasst noch an keinen Rennen teilgenommen!
                 </Button> : null}
-                {this.state.runInformation.sort((a, b) => a.date - b.date).map((item, index) => {
+                {this.state.runInformation.sort((a, b) => a - b).map((item, index) => {
                     return (
                         <View style={styles.container} key={index}>
                             <RunningComponent name={item["name"]}
                                               length={item["length"]}
                                               duration={item["duration"]}
                                               date={new Date(item["date"] * 1000).toLocaleDateString("de-CH")}
-                                              runnerNumber={this.state.runArray[0]["runnerNumber"]}
+                                              runnerNumber={this.state.runArray[index]["runnerNumber"]}
                                               einzellaufer={true}
                                               active={this.getActiveRuns(index)}
+                                              role={this.state.role}
                             />
                         </View>
                     )
