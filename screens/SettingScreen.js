@@ -67,7 +67,7 @@ export default class SettingScreen extends React.Component {
 
     render() {
         return (
-            <Layout style={styles.layout} level='1'>
+            <View style={styles.layout}>
                 <View style={styles.container}>
                     <Avatar style={styles.avatar} size='giant' source={require('../assets/head.png')}/>
                     <Text>Email: {auth.currentUser?.email}</Text>
@@ -100,7 +100,7 @@ export default class SettingScreen extends React.Component {
                         style={styles.button}
                     >
                         <Feather style={styles.iconLeft} name='key' size={20}/>
-                        <Text style={styles.buttonText}>Password wechseln</Text>
+                        <Text style={styles.buttonText}>Password zurücksetzen</Text>
                         <Ionicons style={styles.iconRight} name="arrow-forward-outline" size={20}/>
                     </TouchableOpacity>
                     <Modal
@@ -110,7 +110,7 @@ export default class SettingScreen extends React.Component {
                         <Card disabled={true}>
                             <Text>{this.state.text} 😻</Text>
                             <Button onPress={() => this.updateInputVal(false, 'visible')}>
-                                DISMISS
+                                Ausblenden
                             </Button>
                         </Card>
                     </Modal>
@@ -122,22 +122,26 @@ export default class SettingScreen extends React.Component {
                         <Text style={styles.buttonText}>DSGVO</Text>
                         <Ionicons style={styles.iconRight} name="arrow-forward-outline" size={20}/>
                     </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => this.goToDSGVO()}
-                        style={styles.button}
-                    >
-                        <Feather style={styles.iconLeft} name='user-plus' size={20}/>
-                        <Text style={styles.buttonText}>Füge Läufer hinzu</Text>
-                        <Ionicons style={styles.iconRight} name="arrow-forward-outline" size={20}/>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => this.goToDSGVO()}
-                        style={styles.button}
-                    >
-                        <Feather style={styles.iconLeft} name='bar-chart-2' size={20}/>
-                        <Text style={styles.buttonText}>Zeige Läufer Statistik</Text>
-                        <Ionicons style={styles.iconRight} name="arrow-forward-outline" size={20}/>
-                    </TouchableOpacity>
+                    {this.state.role === "Admin" || this.state.role === "Runner" ?
+                        <TouchableOpacity
+                            onPress={() => this.goToDSGVO()}
+                            style={styles.button}
+                        >
+                            <Feather style={styles.iconLeft} name='user-plus' size={20}/>
+                            <Text style={styles.buttonText}>Füge Läufer hinzu</Text>
+                            <Ionicons style={styles.iconRight} name="arrow-forward-outline" size={20}/>
+                        </TouchableOpacity>
+                        : null}
+                    {this.state.role === "Admin" || this.state.role === "Runner" ?
+                        <TouchableOpacity
+                            onPress={() => this.goToDSGVO()}
+                            style={styles.button}
+                        >
+                            <Feather style={styles.iconLeft} name='bar-chart-2' size={20}/>
+                            <Text style={styles.buttonText}>Zeige Läufer Statistik</Text>
+                            <Ionicons style={styles.iconRight} name="arrow-forward-outline" size={20}/>
+                        </TouchableOpacity>
+                        : null}
                     <TouchableOpacity
                         onPress={() => this.goToInfo()}
                         style={styles.button}
@@ -155,15 +159,12 @@ export default class SettingScreen extends React.Component {
                         <Ionicons style={styles.iconRight} name="arrow-forward-outline" size={20}/>
                     </TouchableOpacity>
                 </View>
-            </Layout>
+            </View>
         )
     }
 }
 
 const styles = StyleSheet.create({
-    layout: {
-        height: 1000
-    },
     container: {
         justifyContent: 'center',
         alignItems: 'center'

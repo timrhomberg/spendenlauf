@@ -70,6 +70,18 @@ export default class ProfileScreen extends React.Component {
         }
     }
 
+    async updateData() {
+        const userRef = firestore.collection('users').doc(auth.currentUser.uid);
+        const doc = await userRef.update({
+            'prename': this.state.prename,
+            'surname': this.state.surname,
+            'email': this.state.email,
+            'street': this.state.street,
+            'city': this.state.city,
+            'plz': this.state.plz,
+        });
+    }
+
     render() {
         return (
             <Layout style={styles.layout} level='1'>
@@ -132,7 +144,8 @@ export default class ProfileScreen extends React.Component {
                 <Text style={styles.text} category='p2'>Geschlecht</Text>
                 <Select
                     style={styles.select}
-                    onSelect={index => console.log(index)}>
+                    onSelect={index => console.log(index)}
+                    value={this.state.gender}>
                     <SelectItem title='Mann'/>
                     <SelectItem title='Frau'/>
                     <SelectItem title='Intersexuell'/>
@@ -140,7 +153,8 @@ export default class ProfileScreen extends React.Component {
                 <Text style={styles.text} category='p2'>Tshirt Grösse</Text>
                 <Select
                     style={styles.select}
-                    onSelect={index => console.log(index)}>
+                    onSelect={index => console.log(index)}
+                    value={this.state.tshirt}>
                     <SelectItem title='XS'/>
                     <SelectItem title='S'/>
                     <SelectItem title='M'/>
@@ -148,10 +162,10 @@ export default class ProfileScreen extends React.Component {
                     <SelectItem title='XL'/>
                 </Select>
                 <TouchableOpacity
-                    onPress={() => this.getData().then(() => console.log("hello"))}
+                    onPress={() => this.updateData().then(() => console.log("Data was updated"))}
                     style={styles.button}
                 >
-                    <Text style={styles.buttonText}>Get Data</Text>
+                    <Text style={styles.buttonText}>Speichern</Text>
                 </TouchableOpacity>
             </Layout>
         )
@@ -172,7 +186,9 @@ const styles = StyleSheet.create({
         padding: 15,
         borderRadius: 10,
         alignItems: 'center',
-        marginTop: 40
+        marginTop: 40,
+        marginRight: 20,
+        marginLeft: 20,
     },
     buttonText: {
         color: 'white',

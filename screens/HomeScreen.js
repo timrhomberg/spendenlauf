@@ -106,8 +106,6 @@ export default class HomeScreen extends React.Component {
 
     async getDonationRunInformation(laufId) {
         return firestore.collection('laufe').doc(laufId).get();
-        //console.log(laufId);
-        //return firestore.collection('laufe').doc(laufId).get();
     }
 
     getActiveRuns(index) {
