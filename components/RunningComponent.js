@@ -7,8 +7,6 @@ import {auth, firestore} from "../firebase/firebase";
 export default class RunningComponent extends React.Component {
     constructor(props) {
         super(props);
-        console.log("HELLLLLLLLLLLLLLLLLLLLo PROPS:")
-        console.log(this.props);
         this.state = {
             runnerNumber: ''
         }
@@ -31,6 +29,8 @@ export default class RunningComponent extends React.Component {
     getRFIDStyle() {
         if (this.props.active) {
             return [styles.rfid];
+        } else {
+            return styles.rfidNone;
         }
     }
 
@@ -38,7 +38,7 @@ export default class RunningComponent extends React.Component {
         return (
             <View style={this.getStyles()}>
                 <Text style={styles.text}>{this.props.name} ({this.props.length}m)</Text>
-                <Text style={styles.text}>Dauer: {this.props.duration}min</Text>
+                <Text style={styles.text}>Dauer: {this.props.duration} min</Text>
                 <Text style={styles.text}>Datum: {this.props.date}</Text>
                 <Text style={styles.text}>Laufnummer: {this.props.runnerNumber}</Text>
                 <Text style={styles.text}>Ist Einzelläufer: {this.props.einzellaufer ? "Ja" : "Nein"}</Text>
@@ -70,6 +70,9 @@ const styles = StyleSheet.create({
         width: '70%'
     },
     rfid: {
-        paddingTop: 25
+        paddingTop: 25,
+    },
+    rfidNone: {
+        display: "none"
     }
 })

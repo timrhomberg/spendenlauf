@@ -2,14 +2,14 @@ import React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {Avatar, Button, Card, Layout, Modal} from '@ui-kitten/components'
 import {AntDesign, Feather, Ionicons, MaterialIcons} from "@expo/vector-icons";
-import {auth} from "../firebase/firebase";
+import {auth, firestore} from "../firebase/firebase";
 
 export default class SettingScreen extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            role: 'Admin',
+            role: '',
             visible: false,
             text: ''
         }
@@ -20,8 +20,22 @@ export default class SettingScreen extends React.Component {
         navigation.navigate("Profile");
     }
 
+    componentDidMount() {
+        this.getRoleData().then(() => console.log("User Role loaded"))
+    }
+
     async sendPasswordReset() {
         await auth.sendPasswordResetEmail(auth.currentUser.email);
+    }
+
+    async getRoleData() {
+        const userRef = firestore.collection('users').doc(auth.currentUser.uid);
+        const doc = await userRef.get();
+        if (!doc.exists) {
+            console.log('No such document!');
+        } else {
+            this.updateInputVal(doc.data()["role"], 'role');
+        }
     }
 
     goToDSGVO() {

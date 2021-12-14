@@ -1,10 +1,8 @@
 import React from 'react'
-import {StyleSheet, View, ScrollView, TouchableOpacity} from 'react-native'
-import {Layout, Text} from "@ui-kitten/components";
+import {StyleSheet, View, ScrollView} from 'react-native'
 import RunningComponent from "../components/RunningComponent";
-import ExampleComponent from "../components/ExampleComponent";
 import {auth, firestore} from "../firebase/firebase";
-import {Touchable} from "react-native-web";
+import {Button, Text} from "@ui-kitten/components";
 
 export default class HomeScreen extends React.Component {
     constructor(props) {
@@ -31,7 +29,6 @@ export default class HomeScreen extends React.Component {
                     runArray.push(doc.data());
                     this.updateInputVal(runArray, "runArray");
                     console.log("Length run Array:", this.state.runArray.length);
-                    this.state.runArray.push(doc.data());
                 });
             })
             .then(() => {
@@ -51,7 +48,7 @@ export default class HomeScreen extends React.Component {
                     )
                 }
             })
-            .then(() => {
+            /*.then(() => {
                 this.getUserGroupInformation()
                     .then((querySnapshot) => {
                         console.log("1")
@@ -83,7 +80,7 @@ export default class HomeScreen extends React.Component {
                             )
                         }
                     })
-            })
+            })*/
             .catch((error) => {
                 console.log("Error getting documents: ", error);
             });
@@ -96,9 +93,7 @@ export default class HomeScreen extends React.Component {
     }
 
     async getUserRunInformation() {
-        //const userRunRef = firestore.collection('users-in-lauf').where('userId', '==', auth.currentUser.uid);
         return firestore.collection('users-in-lauf').where("userId", "==", auth.currentUser.uid).get();
-        //return await userRunRef.get();
     }
 
     async getUserGroupInformation() {
@@ -110,7 +105,7 @@ export default class HomeScreen extends React.Component {
     }
 
     async getDonationRunInformation(laufId) {
-        return firestore.collection('laufe').doc("T0Ti0DqJwrCBSVLHwhOz").get();
+        return firestore.collection('laufe').doc(laufId).get();
         //console.log(laufId);
         //return firestore.collection('laufe').doc(laufId).get();
     }
@@ -122,21 +117,19 @@ export default class HomeScreen extends React.Component {
     render() {
         return (
             <ScrollView>
-                <TouchableOpacity
-                    onPress={() => this.getData()}
-                >
-                    <Text>press</Text>
-                </TouchableOpacity>
-                {this.state.runInformation.map((item, index) => {
+                {this.state.runInformation.length === 0 ?     <Button style={styles.button} appearance='outline' status='info'>
+                    Du hasst noch an keinen Rennen teilgenommen!
+                </Button> : null}
+                {this.state.runInformation.sort((a, b) => a.date - b.date).map((item, index) => {
                     return (
-                        <View style={styles.container}>
+                        <View style={styles.container} key={index}>
                             <RunningComponent name={item["name"]}
                                               length={item["length"]}
                                               duration={item["duration"]}
                                               date={new Date(item["date"] * 1000).toLocaleDateString("de-CH")}
                                               runnerNumber={this.state.runArray[0]["runnerNumber"]}
                                               einzellaufer={true}
-                                              active={true || this.getActiveRuns(index)}
+                                              active={this.getActiveRuns(index)}
                             />
                         </View>
                     )
@@ -150,6 +143,10 @@ const styles = StyleSheet.create({
     container: {
         alignSelf: 'center',
         width: '85%'
+    },
+    button: {
+        alignSelf: 'center',
+        margin: 5,
     }
 })
 

@@ -17,7 +17,7 @@ const Tabs = () => {
                 ),
 
             }}/>
-            <Tab.Screen name="Setting" component={SettingScreen} options={{
+            <Tab.Screen name="Einstellung" component={SettingScreen} options={{
                 tabBarIcon: ({color, size}) => (
                     <Ionicons name="settings-outline" size={24} color="black"/>
                 )

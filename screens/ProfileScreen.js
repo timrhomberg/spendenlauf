@@ -53,8 +53,6 @@ export default class ProfileScreen extends React.Component {
         if (!doc.exists) {
             console.log('No such document!');
         } else {
-            console.log('Document data:', doc.data());
-            console.log(doc.data()["role"]);
             this.updateInputVal(doc.data()["role"], 'role');
             this.updateInputVal(doc.data()["acceptsTerms"], 'acceptsTerms');
             this.updateInputVal(doc.data()["birthdate"], 'birthdate');
