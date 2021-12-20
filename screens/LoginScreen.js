@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
 import { auth } from '../firebase/firebase'
-import { Button, Input, Layout } from '@ui-kitten/components';
+import {Button, Input, Layout, Text} from '@ui-kitten/components';
 
 export default class LoginScreen extends React.Component {
     constructor(props) {
@@ -52,6 +52,20 @@ export default class LoginScreen extends React.Component {
             <Layout
                 style={styles.container}
             >
+                <View style={styles.headerContainer}>
+                    <Text
+                        category='h1'
+                        status='control'>
+                        Hello
+                    </Text>
+                    <Text
+                        style={styles.signInLabel}
+                        category='s1'
+                        status='control'>
+                        Sign in to your account
+                    </Text>
+                </View>
+
                 <View style={styles.inputContainer}>
                     <Input
                         placeholder="Email"
@@ -68,9 +82,6 @@ export default class LoginScreen extends React.Component {
                         size='medium'
                         secureTextEntry
                     />
-                </View>
-
-                <View style={styles.buttonContainer}>
                     <Button
                         onPress={() => this.handleLogin()}
                         style={styles.button}
@@ -93,27 +104,29 @@ export default class LoginScreen extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        height: "100%"
+    },
+    headerContainer: {
         justifyContent: 'center',
         alignItems: 'center',
+        minHeight: 216,
+        backgroundColor: '#0782F9',
+    },
+    signInLabel: {
+        marginTop: 16,
     },
     inputContainer: {
-        width: '80%'
+        justifyContent: "center",
+        alignItems: "center",
     },
     input: {
-        backgroundColor: 'white',
+        width: '80%',
         borderRadius: 10,
         marginTop: 5,
     },
-    buttonContainer: {
-        width: '60%',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 40,
-    },
     button: {
         backgroundColor: '#0782F9',
-        width: '100%',
+        width: '80%',
         padding: 15,
         borderRadius: 10,
         alignItems: 'center',
