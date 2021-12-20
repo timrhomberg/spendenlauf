@@ -10,6 +10,7 @@ import * as eva from '@eva-design/eva';
 import {FeatherIconsPack} from './feather-icons';
 import Tabs from "./navigation/tabs";
 import InfoScreen from "./screens/InfoScreen";
+import RunnerScreen from "./screens/RunnerScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -25,6 +26,7 @@ export default class App extends Component {
                         <Stack.Screen name="Profile" component={ProfileScreen}/>
                         <Stack.Screen name="Info" component={InfoScreen}/>
                         <Stack.Screen name="DSGVO" component={DSGVOScreen}/>
+                        <Stack.Screen name="Runner" component={RunnerScreen}/>
                     </Stack.Navigator>
                 </NavigationContainer>
             </ApplicationProvider>

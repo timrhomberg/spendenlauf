@@ -43,6 +43,11 @@ export default class SettingScreen extends React.Component {
         navigation.navigate("DSGVO");
     }
 
+    goToRunner() {
+        const {navigation} = this.props;
+        navigation.navigate("Runner");
+    }
+
     handleSignOut() {
         auth
             .signOut()
@@ -124,21 +129,11 @@ export default class SettingScreen extends React.Component {
                     </TouchableOpacity>
                     {this.state.role === "Admin" || this.state.role === "Runner" ?
                         <TouchableOpacity
-                            onPress={() => this.goToDSGVO()}
+                            onPress={() => this.goToRunner()}
                             style={styles.button}
                         >
                             <Feather style={styles.iconLeft} name='user-plus' size={20}/>
                             <Text style={styles.buttonText}>Füge Läufer hinzu</Text>
-                            <Ionicons style={styles.iconRight} name="arrow-forward-outline" size={20}/>
-                        </TouchableOpacity>
-                        : null}
-                    {this.state.role === "Admin" || this.state.role === "Runner" ?
-                        <TouchableOpacity
-                            onPress={() => this.goToDSGVO()}
-                            style={styles.button}
-                        >
-                            <Feather style={styles.iconLeft} name='bar-chart-2' size={20}/>
-                            <Text style={styles.buttonText}>Zeige Läufer Statistik</Text>
                             <Ionicons style={styles.iconRight} name="arrow-forward-outline" size={20}/>
                         </TouchableOpacity>
                         : null}
