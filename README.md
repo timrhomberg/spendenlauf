@@ -6,10 +6,3 @@ https://timestamp.online/
 change here:
 https://console.firebase.google.com/project/uitest-caad1/firestore/data/~2Flaufe~2FInDP9YrO8A87vRqviRFI
 
-
-
-| Username                | Password |   Role |
-|:------------------------|:--------:|-------:|
-| t@t.com                 | (O) (O)  |   User |
-| tim@rhomberg.work       | (O) (O)  | Runner |
-| timrhomberg@hotmail.com | (O) (O)  |  Admin |
